@@ -1,4 +1,4 @@
-package com.application.clinic;
+package clinic;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
