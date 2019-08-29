@@ -5,10 +5,12 @@ import com.application.clinic.model.Pet;
 import com.application.clinic.services.OwnerService;
 import com.application.clinic.services.PetService;
 import com.application.clinic.services.PetTypeService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
 @Service
+@Profile({"default", "map"})
 public class OwnerMapService extends AbstractMapService<Owner, Long> implements OwnerService {
 
     private final PetTypeService petTypeService;
@@ -37,27 +39,28 @@ public class OwnerMapService extends AbstractMapService<Owner, Long> implements 
     @Override
     public Owner save(Owner object) {
 
-        if(object!=null){
-            if(object.getPets()!=null){
+
+        if(object != null){
+            if (object.getPets() != null) {
                 object.getPets().forEach(pet -> {
-                    if(pet.getPetType()!=null){
-                        if(pet.getPetType().getId()==null){
+                    if (pet.getPetType() != null){
+                        if(pet.getPetType().getId() == null){
                             pet.setPetType(petTypeService.save(pet.getPetType()));
                         }
-                    }else {
-                        throw new RuntimeException("Pet type is required");
+                    } else {
+                        throw new RuntimeException("Pet Type is required");
                     }
 
-                    if(pet.getId()==null){
+                    if(pet.getId() == null){
                         Pet savedPet = petService.save(pet);
                         pet.setId(savedPet.getId());
                     }
                 });
             }
 
+            return super.save(object);
 
-            return super.save( object);
-        }else{
+        } else {
             return null;
         }
 
